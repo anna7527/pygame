@@ -1,1 +1,71 @@
+# coding: utf8
+import pygame
+
+# размер окна
+size = [400, 400]
+window = pygame.display.set_mode(size)
+
+# задайте имя
+pygame.display.set_caption("First file")
+
+screen = pygame.Surface(size)
+
+# создание объекта
+square = pygame.Surface([40, 40])
+square.fill([0, 0, 0])
+#right_free = True
+#x = 0
+x=9
+#y = 0
+y=5
+df=True
+rf=True
+running = True
+while running:
+    # обработка событий
+    for e in pygame.event.get():
+        if e.type == pygame.QUIT:
+            running = False
+
+    # задайте фоновый цвет
+    screen.fill([34, 182, 111])
+
+    # движение квадрата
+    #x+=1
+    if rf==True:
+        if x>=0:
+            x+=1
+        else:
+            rf=False
+    if(rf==False):
+        if(x<=360):
+            x-=1
+        else:
+            rf=True
+
+
+
+
+    if df==True:
+        if y<=360:
+            y+=1
+        else:
+            df=False
+    if(df==False):
+        if(y>=0):
+            y-=1
+        else:
+            df=True
+
+
+    # отображение квадрата
+    screen.blit(square, [0, y])
+    screen.blit(square, [x, 0])
+
+    # отображение окна
+    window.blit(screen, [0, 0])
+    pygame.display.flip()
+    pygame.time.delay(5)
+
+pygame.quit()
 
