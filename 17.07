@@ -1,0 +1,147 @@
+# coding: utf8
+import pygame
+import random
+
+# задаем размер окна, создаем окно размера size
+size = [400, 400]
+window = pygame.display.set_mode(size)
+# задаем имя - в кавычках, т.к. текст - это строка
+pygame.display.set_caption(' second project')
+
+screen = pygame.Surface(size)
+#y = 0
+y = 0
+#x = 0
+x = 0
+#rf
+rf = 0
+#rf2
+rf2 = 0
+#rf3
+rf3 = 0
+class Sprite:
+    def __init__(self, xpos, ypos, filename):
+        self.x = xpos
+        self.y = ypos
+        self.bitmap = pygame.image.load(filename)
+
+    def render(self):
+        screen.blit(self.bitmap, (self.x, self.y))
+
+
+def Intersect(s1_x, s2_x, s1_y, s2_y):
+    if ((s1_x > s2_x - 40) and (s1_x < s2_x + 40) and (s1_y > s2_y - 40) and (s1_y < s2_y + 40)):
+        return 1
+    else:
+        return 0
+
+
+# создание персонажей
+# герой
+hero = Sprite(0, 360, 'bear.png')
+# переменные-"переключатели" движения для героя
+hero.right = True
+hero.up = True
+# враг
+enemy = Sprite(0, 0, 'masha.jpg')
+# переменные-"переключатели" движения для врага
+enemy.right = True
+enemy.up = False
+# сердечки
+serdechki  = Sprite(360, 360, 'serdechki.jpg')
+serdechki2  = Sprite(320, 360, 'serdechki.jpg')
+serdechki3  = Sprite(280, 360, 'serdechki.jpg')
+morkovka  = Sprite(0, 360, 'morkovka.png')
+
+morkovka.push = False
+
+
+pygame.key.set_repeat(1,1)
+running = True
+while running:
+    # обработка событий
+    for e in pygame.event.get():
+        if e.type == pygame.QUIT:
+            running = False
+        if e.type ==pygame.KEYDOWN:
+            if e.key==pygame.K_LEFT:
+                 if hero.x >=0:
+                     hero.x-=1
+            if e.key == pygame.K_RIGHT:
+                if hero.x <= 360:
+                    hero.x += 1
+            if e.key == pygame.K_UP:
+                if hero.y >= 150:
+                    hero.y -=1
+            if e.key == pygame.K_DOWN:
+                if hero.y <=360:
+                    hero.y +=1
+            if e.key == pygame.K_SPACE:
+                morkovka.x = hero.x
+                morkovka.y = hero.y
+                morkovka.push = True
+
+
+
+
+
+    # задайте фоновый цвет
+    screen.fill([25, 195, 95])
+
+    # движение персонажей - аналогично тому,
+    # что делали с квадратом, но теперь по вертикали
+
+
+    if enemy.up == True:
+        enemy.x -= 10
+        if enemy.x <= 0:
+             enemy.up = False
+    if enemy.up == False:
+        enemy.x += 10
+        if enemy.x >= 360:
+            enemy.up = True
+    if morkovka.push == True:
+        morkovka.y -=20
+        if morkovka.y <=0:
+            morkovka.push =False
+            morkovka.y =-200
+            morkovka.x =-200
+
+
+
+
+
+
+
+    # enemy.x = random.randint(0, 400)
+    # enemy.y = random.randint(0, 400)
+
+    # столкновение персонажей
+    if Intersect(hero.x, enemy.x, hero.y, enemy.y):
+        hero.up = False
+        enemy.up = True
+    if Intersect(morkovka.x, enemy.x, morkovka.y, enemy.y):
+        morkovka.up =False
+        enemy.up = True
+
+        enemy.x=random.randint(0,360)
+
+
+    # отображение персонажей
+    hero.render()
+    enemy.render()
+    morkovka.render()
+    serdechki.render()
+    serdechki2.render()
+    serdechki3.render()
+
+    # отображение окна
+    window.blit(screen, [0, 0])
+    pygame.display.flip()
+    pygame.time.delay(50)
+   # text=rf.render(0,[R,G,B])
+    #screen.blit(text,[x,y])
+    #score = pygame.surface([400,60])
+    #score.ALL([R,G,B])
+    #window.blit(score,[0,0])
+pygame.quit()
